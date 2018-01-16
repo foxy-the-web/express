@@ -32,20 +32,15 @@ const makeRequest = function(method, url, callback){
 
 const testCallback = (response) => {
   
-  let keys = Object.keys(response[0]);
+  for(element of response) {
+    let keys = Object.keys(element);
   
-  response.forEach(item => {
-    
-    document.write('<p>');
-
     for(let i = 0; i < keys.length; i++) {
       let key = keys[i];
-      document.write(key + ': ' + item[key] + '</br>');
+      document.write(key + ': ' + element[key] + '</br>');
     }
-    
-    document.write('</p>');
 
-  });
+  }
 
 }
 
