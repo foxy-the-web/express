@@ -1,38 +1,21 @@
 const express = require('express');
 const https = require('https');
 const app = express();
-/* 
-const getM2data = function(comkey){
-    // request options
-    const options = {
-        rejectUnauthorized: false,
-        hostname: 'api.prod.m2.ov.otto.de',
-        path: '/entity/style/' + comkey.toString(),
-        method: 'GET',
-        auth: 'veops:Sw9TMnwT3*+%4des',
-        headers: {
-            'accept': 'application/json'
-        }
-    };
+const MongoClient = require('mongodb').MongoClient;
+const assert = require('assert');
 
-    const getStyleData = https.get(options, (res) => {
-        res.setEncoding('utf8');
-        let body = '';
-        
-        res.on('data', (data) => {
-            body += data;
-        });
+// Connection URL
+const url = 'mongodb://localhost:27017/express';
 
-        res.on('end', () => {
-            body = JSON.parse(body);
-            let style = body.data[0];
-        });
-
-    });
-
-    console.log(getStyleData);
-
-}; */
+// Use connect method to connect to the server
+MongoClient.connect(url, function(err, db) {
+  assert.equal(null, err);
+  console.log("Connected successfully to server");
+  
+  insertDocuments(db, function() {
+    db.close();
+  });
+});
 
 // Use static files
 app.use(express.static('public'));
@@ -44,8 +27,7 @@ app.get('/', function (req, res) {
  })
 });
 
-
-
+// Start server
 const server = app.listen(3000, function () {
  
     const host = server.address().address;
@@ -54,3 +36,21 @@ const server = app.listen(3000, function () {
     console.log('Example app listening at http://%s:%s', host, port);
 
 });
+
+var insertDocuments = function(db, callback) {
+    
+    console.log(db.options);
+    
+    // // Get the documents collection
+    // var collection = db.collection('documents');
+    // // Insert some documents
+    // collection.insertMany([
+    //   {a : 1}, {a : 2}, {a : 3}
+    // ], function(err, result) {
+    //   assert.equal(err, null);
+    //   assert.equal(3, result.result.n);
+    //   assert.equal(3, result.ops.length);
+    //   console.log("Inserted 3 documents into the collection");
+    //   callback(result);
+    // });
+  }
